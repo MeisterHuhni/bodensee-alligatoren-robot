@@ -7,11 +7,12 @@ Code für den Fußball-Roboter der Roboter-AG am BZM Markdorf
 - **Programmierung:** C++ mit PlatformIO in VS Code (Arduino-Framework)
 - **Sensoren:** IR-Ring mit 16 Sensoren (eigener STM32, über I2C), 4 Ultraschallsensoren,
   Lagesensor BNO055 als Kompass (I2C)
-- **Motortreiber:** 4 × L6201 auf der Hauptplatine
+- **Antrieb:** 2 Räder (Differentialantrieb), Motortreiber L6201 auf der Hauptplatine
+- **Akku:** Hacker Eco-X 2400, 2S LiPo, 7,4 V (Hauptplatine dafür angepasst)
 
 > **Stand:** Grundgerüst. Die Pins sind aus dem Schaltplan der Hauptplatine
-> (DasSoccerBoard-Basic V4.2) eingetragen. Motoren und Kompass (BNO055)
-> funktionieren schon, IR-Ring, Ultraschall und Spiel-Logik fehlen noch.
+> (DasSoccerBoard-Basic V4.2) eingetragen. Fahren (2 Räder) und Kompass (BNO055)
+> sind programmiert, IR-Ring, Ultraschall und Spiel-Logik fehlen noch.
 
 ## Ordner und Dateien
 
@@ -100,7 +101,9 @@ neuesten Stand hat.
 
 - [ ] Liga festlegen (Infrared League oder Standard Kit League), davon hängt die
       Anzahl der Motoren ab
-- [ ] Motormodell klären und Anordnung der Räder festlegen, dann `Motoren::fahren()` schreiben
+- [x] `Motoren::fahren()` für 2 Räder schreiben
+- [ ] Beim ersten Test prüfen: Ist MOT1 links, MOT2 rechts, und muss ein Motor umgedreht werden?
+- [ ] Motormodell klären (wichtig für die Standard Kit League: nur Motoren von der Liste erlaubt)
 - [x] Pins in `include/pins.h` eintragen
 - [x] Kompass (BNO055) auslesen
 - [x] Anschluss IR-Ring klären: I2C über J11 (Wire1)

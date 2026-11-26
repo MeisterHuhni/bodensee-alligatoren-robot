@@ -18,8 +18,8 @@
 // Jeder Motor hat einen Treiber-Chip L6201 mit drei Eingängen:
 //   PWM (= ENABLE): wie schnell (per analogWrite)
 //   IN1, IN2:       in welche Richtung
-// Die Platine hat Platz für 4 Motoren. Laut Regeln dürfen wir aber
-// nur 3 (Infrared League) bzw. 2 (Standard Kit League) zum Fahren benutzen.
+// Die Platine hat Platz für 4 Motoren. Wir benutzen 2 (linkes und
+// rechtes Rad, siehe motoren.cpp). MOT3 und MOT4 sind frei.
 constexpr uint8_t PIN_MOTOR1_PWM = 4;
 constexpr uint8_t PIN_MOTOR1_IN1 = 0;
 constexpr uint8_t PIN_MOTOR1_IN2 = 1;

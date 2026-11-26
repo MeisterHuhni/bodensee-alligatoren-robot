@@ -25,11 +25,15 @@ void starten();
 //           0.0 = bremsen
 void motorSetzen(int nummer, float tempo);
 
-// Roboter fahren lassen.
-//   richtungGrad: wohin fahren (0 = nach vorne, 90 = nach rechts, ...)
-//   tempo:        wie schnell, von 0.0 (steht) bis 1.0 (Vollgas)
-//   drehung:      wie stark drehen, von -1.0 (links) bis +1.0 (rechts)
-void fahren(float richtungGrad, float tempo, float drehung);
+// Roboter fahren lassen. Unser Roboter hat 2 Räder (links und rechts),
+// wie ein Panzer: Er kann nur vor/zurück fahren und sich drehen, aber
+// nicht seitwärts. Man nennt das "Differentialantrieb".
+//   tempo:   -1.0 (rückwärts) bis +1.0 (vorwärts), 0.0 = nicht vor/zurück
+//   drehung: -1.0 (links herum) bis +1.0 (rechts herum), 0.0 = geradeaus
+// Beispiele: fahren(1.0, 0.0) = Vollgas geradeaus
+//            fahren(0.0, 0.5) = auf der Stelle nach rechts drehen
+//            fahren(0.6, 0.3) = vorwärts in einer Rechtskurve
+void fahren(float tempo, float drehung);
 
 // Alle Motoren sofort bremsen.
 void stopp();

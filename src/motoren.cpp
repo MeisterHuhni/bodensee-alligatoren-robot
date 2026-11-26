@@ -14,8 +14,9 @@
 // analogWrite() sehr schnell an und aus. Je länger "an", desto
 // schneller dreht der Motor.
 //
-// STAND: motorSetzen() und stopp() funktionieren.
-// fahren() fehlt noch, weil die Anordnung der Räder noch offen ist.
+// Unser Roboter hat 2 Antriebsmotoren (Differentialantrieb).
+// Die Anschlüsse MOT3 und MOT4 bleiben frei; stopp() bremst sie
+// trotzdem mit, damit sie nie zufällig an sind.
 // =============================================================
 #include "motoren.h"
 #include <Arduino.h>
@@ -31,6 +32,17 @@ static const uint8_t IN1_PINS[ANZAHL_ANSCHLUESSE] = {
     PIN_MOTOR1_IN1, PIN_MOTOR2_IN1, PIN_MOTOR3_IN1, PIN_MOTOR4_IN1};
 static const uint8_t IN2_PINS[ANZAHL_ANSCHLUESSE] = {
     PIN_MOTOR1_IN2, PIN_MOTOR2_IN2, PIN_MOTOR3_IN2, PIN_MOTOR4_IN2};
+
+// Welcher Anschluss welches Rad ist. VOR DEM ERSTEN TEST PRÜFEN!
+constexpr int MOTOR_LINKS = 1;    // MOT1
+constexpr int MOTOR_RECHTS = 2;   // MOT2
+
+// Die beiden Motoren sind spiegelverkehrt eingebaut. Wenn beide
+// "vorwärts" drehen, würde der Roboter sich auf der Stelle drehen.
+// Deshalb muss meist EIN Motor umgekehrt werden. Wenn der Roboter bei
+// fahren(0.5, 0.0) nicht geradeaus vorwärts fährt, hier true/false tauschen.
+constexpr bool LINKS_UMKEHREN = false;
+constexpr bool RECHTS_UMKEHREN = true;
 
 // Größter Wert für analogWrite(). Beim Teensy ist er standardmäßig
 // 255 (8 Bit). 255 = immer an = Vollgas.
@@ -79,16 +91,28 @@ void motorSetzen(int nummer, float tempo) {
   analogWrite(PWM_PINS[i], (int)(fabs(tempo) * PWM_MAX));
 }
 
-void fahren(float richtungGrad, float tempo, float drehung) {
-  // TODO: Aus Richtung, Tempo und Drehung die Geschwindigkeit für
-  // jeden einzelnen Motor ausrechnen und mit motorSetzen() ausgeben.
-  // Dafür müssen wir wissen, in welchem Winkel die Räder sitzen.
+void fahren(float tempo, float drehung) {
+  // Idee: Für eine Rechtsdrehung muss das linke Rad schneller sein als
+  // das rechte. Also zählen wir die Drehung links dazu und ziehen sie
+  // rechts ab.
+  float links = tempo + drehung;
+  float rechts = tempo - drehung;
 
-  // Diese drei Zeilen tun nichts. Sie verhindern nur die Warnung
-  // "Variable wird nicht benutzt", solange die Funktion leer ist.
-  (void)richtungGrad;
-  (void)tempo;
-  (void)drehung;
+  // Problem: Bei fahren(1.0, 0.5) wäre links = 1.5, also mehr als
+  // Vollgas. Dann teilen wir BEIDE Werte durch den größeren, damit das
+  // Verhältnis (und damit die Kurve) gleich bleibt.
+  float groesster = max(fabs(links), fabs(rechts));
+  if (groesster > 1.0f) {
+    links = links / groesster;
+    rechts = rechts / groesster;
+  }
+
+  // Spiegelverkehrten Motor umdrehen (siehe oben).
+  if (LINKS_UMKEHREN)  links = -links;
+  if (RECHTS_UMKEHREN) rechts = -rechts;
+
+  motorSetzen(MOTOR_LINKS, links);
+  motorSetzen(MOTOR_RECHTS, rechts);
 }
 
 void stopp() {
