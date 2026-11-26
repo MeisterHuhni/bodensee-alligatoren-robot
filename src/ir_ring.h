@@ -7,9 +7,9 @@
 //
 // Unser IR-Ring (Schaltplan "IR-Ring V1.1") hat einen EIGENEN
 // Mikrocontroller (STM32). Der liest die Sensoren aus und rechnet.
-// Der Teensy fragt ihn nur nach dem Ergebnis. Dafür hat der Ring
-// drei Anschlüsse: UART, SPI und I2C. Welchen wir benutzen, ist
-// noch offen.
+// Der Teensy fragt ihn nur nach dem Ergebnis. Verbunden sind beide
+// über I2C: Stecker "I2C-Intercon" (J11 auf der Hauptplatine, J3 auf
+// dem Ring). Das ist derselbe Bus wie beim Kompass, also "Wire1".
 //
 // Wichtig laut Regeln: Wir dürfen selbst KEIN IR-Licht aussenden.
 // Die Sensoren empfangen nur.

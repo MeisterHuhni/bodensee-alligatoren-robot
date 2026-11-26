@@ -1,9 +1,9 @@
 // =============================================================
 // ir_ring.cpp – IR-Ring (Umsetzung)
 // =============================================================
-// STAND: Noch keine echte Logik, weil noch offen ist, über welchen
-// Anschluss (UART, SPI oder I2C) der Ring mit dem Teensy redet und
-// was das Programm auf dem STM32 des Rings zurückschickt.
+// STAND: Noch keine echte Logik. Der Anschluss ist klar (I2C über
+// Wire1), aber die I2C-Adresse und was der Ring zurückschickt, legt
+// erst das Programm auf dem STM32 fest.
 // =============================================================
 #include "ir_ring.h"
 #include <Arduino.h>
@@ -19,7 +19,8 @@ static float richtung = 0.0f;
 static int staerke = 0;
 
 void starten() {
-  // TODO: Verbindung zum IR-Ring starten (z.B. Serial6.begin(...)).
+  // TODO: Prüfen, ob der Ring auf Wire1 antwortet (Adresse kommt
+  // vom STM32-Programm; frei sind z.B. nicht 0x20, 0x28, 0x40, 0x41).
   for (int i = 0; i < ANZAHL_SENSOREN; i++) {
     werte[i] = 0;
   }

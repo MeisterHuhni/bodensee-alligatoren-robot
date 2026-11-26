@@ -46,7 +46,8 @@ constexpr uint8_t PIN_MOTOR_STROM_AN = 27;
 constexpr uint8_t PIN_START_SCHALTER = 10;
 
 // ---------- I2C-Bus (Blatt 4/8) ----------
-// Am I2C-Bus hängen: Kompass BNO055 (Adresse 0x28), Port-Expander
+// Am I2C-Bus hängen: Kompass BNO055 (Adresse 0x28), IR-Ring über
+// den Stecker I2C-Intercon J11 (Adresse noch offen), Port-Expander
 // TCA9534 für Taster/Schalter (0x20), Strommessung INA219 für den
 // Akku (0x40) und für den Dribbler (0x41).
 // ACHTUNG: Auf unserer Platine ist das NICHT der Standard-Bus (Pins
@@ -58,8 +59,6 @@ constexpr uint8_t PIN_I2C_SCL = 16;
 // Stecker UART1 (J6):     Teensy Serial6 (TX = Pin 24, RX = Pin 25)
 // Stecker UART2 (J7):     Teensy Serial7 (TX = Pin 29, RX = Pin 28)
 // Stecker Pixy-Kamera:    Teensy Serial3 (TX = Pin 14, RX = Pin 15)
-// Der IR-Ring kann über UART, SPI oder I2C angeschlossen werden
-// (siehe ir_ring.h).
 
 // ---------- SPI-Stecker (Blatt 3/8) ----------
 // Pins 11 (MOSI), 12 (MISO), 13 (SCK) sind der SPI-Bus.

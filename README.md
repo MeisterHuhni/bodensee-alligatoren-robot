@@ -5,7 +5,7 @@ Code für den Fußball-Roboter der Roboter-AG am BZM Markdorf
 
 - **Mikrocontroller:** Teensy 4.0 auf unserer eigenen Hauptplatine
 - **Programmierung:** C++ mit PlatformIO in VS Code (Arduino-Framework)
-- **Sensoren:** IR-Ring mit 16 Sensoren (eigener STM32), 4 Ultraschallsensoren,
+- **Sensoren:** IR-Ring mit 16 Sensoren (eigener STM32, über I2C), 4 Ultraschallsensoren,
   Lagesensor BNO055 als Kompass (I2C)
 - **Motortreiber:** 4 × L6201 auf der Hauptplatine
 
@@ -103,6 +103,7 @@ neuesten Stand hat.
 - [ ] Motormodell klären und Anordnung der Räder festlegen, dann `Motoren::fahren()` schreiben
 - [x] Pins in `include/pins.h` eintragen
 - [x] Kompass (BNO055) auslesen
-- [ ] Klären, über welchen Anschluss der IR-Ring redet (UART, SPI oder I2C), dann auslesen
-- [ ] Klären, wie die Ultraschallsensoren angeschlossen werden, dann auslesen
+- [x] Anschluss IR-Ring klären: I2C über J11 (Wire1)
+- [ ] I2C-Adresse und Datenformat des IR-Rings festlegen (STM32-Programm), dann auslesen
+- [ ] Ultraschallsensoren: Modell und Anschluss klären (noch nicht vorhanden), dann auslesen
 - [ ] Spiel-Logik in `loop()` schreiben
