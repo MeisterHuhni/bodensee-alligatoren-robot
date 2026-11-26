@@ -1,0 +1,103 @@
+// =============================================================
+// main.cpp – Hauptprogramm der Bodensee Alligatoren
+// =============================================================
+// Jedes Arduino-Programm hat zwei Pflicht-Funktionen:
+//   setup() läuft EINMAL, direkt nach dem Einschalten.
+//   loop()  läuft danach IMMER WIEDER, so schnell es geht.
+//
+// Unser loop() folgt immer demselben Muster:
+//   1. Sensoren lesen   (Wo ist der Ball? Wo bin ich?)
+//   2. Entscheiden      (Was soll der Roboter jetzt tun?)
+//   3. Motoren ansteuern
+//
+// STAND: Grundgerüst. Die Module sind noch leer, weil Pins und
+// Motormodell noch nicht feststehen.
+// =============================================================
+#include <Arduino.h>
+
+#include "motoren.h"
+#include "ir_ring.h"
+#include "ultraschall.h"
+#include "kompass.h"
+
+// Wie oft loop() wirklich arbeiten soll: alle 10 Millisekunden
+// (also 100-mal pro Sekunde). So läuft der Roboter gleichmäßig,
+// egal wie schnell der Teensy ist.
+constexpr unsigned long LOOP_INTERVALL_MS = 10;
+
+// Wie oft wir Werte zum Computer schicken (zum Testen).
+constexpr unsigned long AUSGABE_INTERVALL_MS = 500;
+
+// Zeitpunkte des letzten Durchlaufs bzw. der letzten Ausgabe.
+unsigned long letzterLoop = 0;
+unsigned long letzteAusgabe = 0;
+
+// Schickt die aktuellen Sensorwerte an den seriellen Monitor.
+void statusAusgeben() {
+  Serial.print("Ball gesehen: ");
+  Serial.print(IrRing::ballGesehen() ? "ja" : "nein");
+  Serial.print(" | Ball-Richtung: ");
+  Serial.print(IrRing::ballRichtungGrad());
+  Serial.print(" | Kompass: ");
+  Serial.print(Kompass::richtungGrad());
+  Serial.print(" | Abstand vorne: ");
+  Serial.println(Ultraschall::abstandCm(Ultraschall::VORNE));
+}
+
+void setup() {
+  // USB-Verbindung zum Computer starten.
+  Serial.begin(115200);
+  // Kurz warten (max. 2 Sekunden), damit der serielle Monitor
+  // die ersten Meldungen mitbekommt. Ohne Computer geht es danach
+  // einfach weiter.
+  while (!Serial && millis() < 2000) {
+  }
+  Serial.println("Bodensee Alligatoren – Roboter startet ...");
+
+  // Alle Module vorbereiten.
+  Motoren::starten();
+  IrRing::starten();
+  Ultraschall::starten();
+  Kompass::starten();
+
+  // Sicherheit: Am Anfang steht der Roboter still.
+  Motoren::stopp();
+
+  // Die eingebaute LED (Pin 13) zeigt: Programm läuft.
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+
+  Serial.println("Bereit.");
+}
+
+void loop() {
+  // millis() = Millisekunden seit dem Einschalten.
+  unsigned long jetzt = millis();
+
+  // Noch nicht Zeit für den nächsten Durchlauf? Dann sofort zurück.
+  if (jetzt - letzterLoop < LOOP_INTERVALL_MS) {
+    return;
+  }
+  letzterLoop = jetzt;
+
+  // ---------- 1. Sensoren lesen ----------
+  IrRing::lesen();
+  Ultraschall::lesen();
+  Kompass::lesen();
+
+  // ---------- 2. Entscheiden ----------
+  // TODO: Hier kommt später die Spiel-Logik hin, zum Beispiel:
+  //   - Ball gesehen?  -> zum Ball fahren
+  //   - Ball vorne?    -> Richtung gegnerisches Tor fahren
+  //   - Ball weg?      -> zurück vors eigene Tor
+  // Bis dahin bleibt der Roboter stehen.
+
+  // ---------- 3. Motoren ansteuern ----------
+  Motoren::stopp();
+
+  // ---------- Testausgabe ----------
+  if (jetzt - letzteAusgabe >= AUSGABE_INTERVALL_MS) {
+    letzteAusgabe = jetzt;
+    statusAusgeben();
+  }
+}
