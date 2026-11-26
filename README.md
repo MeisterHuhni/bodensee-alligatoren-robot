@@ -5,10 +5,13 @@ Code für den Fußball-Roboter der Roboter-AG am BZM Markdorf
 
 - **Mikrocontroller:** Teensy 4.0 auf unserer eigenen Hauptplatine
 - **Programmierung:** C++ mit PlatformIO in VS Code (Arduino-Framework)
-- **Sensoren:** IR-Ring mit 16 Sensoren, 4 Ultraschallsensoren, 1 Kompass
+- **Sensoren:** IR-Ring mit 16 Sensoren (eigener STM32), 4 Ultraschallsensoren,
+  Lagesensor BNO055 als Kompass (I2C)
+- **Motortreiber:** 4 × L6201 auf der Hauptplatine
 
-> **Stand:** Grundgerüst. Die Module sind angelegt, enthalten aber noch keine
-> echte Logik, weil die Pins und das Motormodell noch nicht feststehen.
+> **Stand:** Grundgerüst. Die Pins sind aus dem Schaltplan der Hauptplatine
+> (DasSoccerBoard-Basic V4.2) eingetragen. Motoren und Kompass (BNO055)
+> funktionieren schon, IR-Ring, Ultraschall und Spiel-Logik fehlen noch.
 
 ## Ordner und Dateien
 
@@ -97,7 +100,9 @@ neuesten Stand hat.
 
 - [ ] Liga festlegen (Infrared League oder Standard Kit League), davon hängt die
       Anzahl der Motoren ab
-- [ ] Motormodell und Motortreiber klären
-- [ ] Pins in `include/pins.h` eintragen
-- [ ] Sensoren auslesen (IR-Ring, Ultraschall, Kompass)
+- [ ] Motormodell klären und Anordnung der Räder festlegen, dann `Motoren::fahren()` schreiben
+- [x] Pins in `include/pins.h` eintragen
+- [x] Kompass (BNO055) auslesen
+- [ ] Klären, über welchen Anschluss der IR-Ring redet (UART, SPI oder I2C), dann auslesen
+- [ ] Klären, wie die Ultraschallsensoren angeschlossen werden, dann auslesen
 - [ ] Spiel-Logik in `loop()` schreiben

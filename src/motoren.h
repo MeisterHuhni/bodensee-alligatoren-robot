@@ -13,8 +13,17 @@
 
 namespace Motoren {
 
-// Einmal in setup() aufrufen: Pins vorbereiten.
+// Anzahl der Motor-Anschlüsse auf der Platine (MOT1 bis MOT4).
+constexpr int ANZAHL_ANSCHLUESSE = 4;
+
+// Einmal in setup() aufrufen: Pins vorbereiten, alles steht still.
 void starten();
+
+// EINEN Motor ansteuern (gut zum Testen, ob alles richtig verkabelt ist).
+//   nummer: 1 bis 4 (wie auf der Platine: MOT1 ... MOT4)
+//   tempo:  -1.0 (volle Kraft rückwärts) bis +1.0 (volle Kraft vorwärts),
+//           0.0 = bremsen
+void motorSetzen(int nummer, float tempo);
 
 // Roboter fahren lassen.
 //   richtungGrad: wohin fahren (0 = nach vorne, 90 = nach rechts, ...)
@@ -22,7 +31,7 @@ void starten();
 //   drehung:      wie stark drehen, von -1.0 (links) bis +1.0 (rechts)
 void fahren(float richtungGrad, float tempo, float drehung);
 
-// Alle Motoren sofort anhalten.
+// Alle Motoren sofort bremsen.
 void stopp();
 
 }  // namespace Motoren

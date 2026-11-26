@@ -1,8 +1,9 @@
 // =============================================================
 // ir_ring.cpp – IR-Ring (Umsetzung)
 // =============================================================
-// STAND: Noch keine echte Logik, weil noch offen ist, wie die
-// 16 Sensoren an den Teensy angeschlossen sind.
+// STAND: Noch keine echte Logik, weil noch offen ist, über welchen
+// Anschluss (UART, SPI oder I2C) der Ring mit dem Teensy redet und
+// was das Programm auf dem STM32 des Rings zurückschickt.
 // =============================================================
 #include "ir_ring.h"
 #include <Arduino.h>
@@ -18,7 +19,7 @@ static float richtung = 0.0f;
 static int staerke = 0;
 
 void starten() {
-  // TODO: Pins der Sensoren als Eingang einstellen.
+  // TODO: Verbindung zum IR-Ring starten (z.B. Serial6.begin(...)).
   for (int i = 0; i < ANZAHL_SENSOREN; i++) {
     werte[i] = 0;
   }
@@ -26,9 +27,9 @@ void starten() {
 }
 
 void lesen() {
-  // TODO: Jeden Sensor auslesen und in werte[i] speichern.
-  // Danach aus allen Werten die Ballrichtung und -stärke berechnen
-  // und in "gesehen", "richtung" und "staerke" speichern.
+  // TODO: Neue Daten vom IR-Ring abholen und in werte[i] speichern.
+  // Danach (oder schon auf dem Ring) Ballrichtung und -stärke
+  // berechnen und in "gesehen", "richtung" und "staerke" speichern.
 }
 
 bool ballGesehen()      { return gesehen; }

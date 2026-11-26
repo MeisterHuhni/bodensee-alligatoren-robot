@@ -1,13 +1,10 @@
 // =============================================================
 // pins.h – Alle Pin-Nummern an EINER Stelle
 // =============================================================
-// Hier steht später, welches Kabel an welchem Pin vom Teensy 4.0
-// hängt. Wenn sich an der Platine etwas ändert, muss man nur
-// diese Datei anpassen und nicht im ganzen Code suchen.
-//
-// STAND: Die Pins sind noch NICHT festgelegt. Deshalb steht
-// überall PIN_UNBEKANNT. Solange ein Pin unbekannt ist, benutzt
-// der Code ihn absichtlich nicht.
+// Hier steht, welches Signal an welchem Pin vom Teensy 4.0 hängt.
+// Quelle: Schaltplan "DasSoccerBoard-Basic V4.2", Blatt 1/8
+// (Teensy-Symbol). Wenn sich an der Platine etwas ändert, muss man
+// nur diese Datei anpassen und nicht im ganzen Code suchen.
 //
 // "constexpr" heißt: Der Wert ist eine feste Konstante, die schon
 // beim Bauen bekannt ist. Das ist wie #define, nur sicherer,
@@ -17,39 +14,69 @@
 
 #include <Arduino.h>
 
-// Platzhalter für "noch nicht festgelegt". 255 gibt es am Teensy 4.0
-// nicht als Pin (er hat Pins 0 bis 39), deshalb ist das sicher erkennbar.
-constexpr uint8_t PIN_UNBEKANNT = 255;
+// ---------- Motoren (Blatt 5/8) ----------
+// Jeder Motor hat einen Treiber-Chip L6201 mit drei Eingängen:
+//   PWM (= ENABLE): wie schnell (per analogWrite)
+//   IN1, IN2:       in welche Richtung
+// Die Platine hat Platz für 4 Motoren. Laut Regeln dürfen wir aber
+// nur 3 (Infrared League) bzw. 2 (Standard Kit League) zum Fahren benutzen.
+constexpr uint8_t PIN_MOTOR1_PWM = 4;
+constexpr uint8_t PIN_MOTOR1_IN1 = 0;
+constexpr uint8_t PIN_MOTOR1_IN2 = 1;
 
-// ---------- Motoren ----------
-// Wie viele Motoren es werden, hängt von der Liga ab
-// (Infrared League: max. 3, Standard Kit League: max. 2).
-// Pro Motor braucht man meist einen PWM-Pin (Tempo) und einen
-// oder zwei Pins für die Richtung – je nach Motortreiber.
-constexpr uint8_t PIN_MOTOR_1_PWM  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_MOTOR_1_DIR  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_MOTOR_2_PWM  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_MOTOR_2_DIR  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_MOTOR_3_PWM  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_MOTOR_3_DIR  = PIN_UNBEKANNT;
+constexpr uint8_t PIN_MOTOR2_PWM = 5;
+constexpr uint8_t PIN_MOTOR2_IN1 = 2;
+constexpr uint8_t PIN_MOTOR2_IN2 = 3;
+
+constexpr uint8_t PIN_MOTOR3_PWM = 6;
+constexpr uint8_t PIN_MOTOR3_IN1 = 7;
+constexpr uint8_t PIN_MOTOR3_IN2 = 8;
+
+constexpr uint8_t PIN_MOTOR4_PWM = 9;
+constexpr uint8_t PIN_MOTOR4_IN1 = 26;
+constexpr uint8_t PIN_MOTOR4_IN2 = 32;
+
+// Schaltet den Motorstrom ein (HIGH) oder aus (LOW). Das wirkt aber
+// nur, wenn auf der Platine die Brücke JP2 durchtrennt ist (Blatt 2/8).
+// Sonst schaltet nur der Schalter "MOT-PWR" die Motoren.
+constexpr uint8_t PIN_MOTOR_STROM_AN = 27;
+
+// ---------- Start-Schalter (Blatt 7/8) ----------
+// Schiebeschalter "START": HIGH = an, LOW = aus.
+constexpr uint8_t PIN_START_SCHALTER = 10;
+
+// ---------- I2C-Bus (Blatt 4/8) ----------
+// Am I2C-Bus hängen: Kompass BNO055 (Adresse 0x28), Port-Expander
+// TCA9534 für Taster/Schalter (0x20), Strommessung INA219 für den
+// Akku (0x40) und für den Dribbler (0x41).
+// ACHTUNG: Auf unserer Platine ist das NICHT der Standard-Bus (Pins
+// 18/19), sondern der zweite Bus des Teensy. Im Code heißt er "Wire1".
+constexpr uint8_t PIN_I2C_SDA = 17;   // nur zur Info, Wire1 kennt die Pins selbst
+constexpr uint8_t PIN_I2C_SCL = 16;
+
+// ---------- Serielle Schnittstellen (Blatt 3/8) ----------
+// Stecker UART1 (J6):     Teensy Serial6 (TX = Pin 24, RX = Pin 25)
+// Stecker UART2 (J7):     Teensy Serial7 (TX = Pin 29, RX = Pin 28)
+// Stecker Pixy-Kamera:    Teensy Serial3 (TX = Pin 14, RX = Pin 15)
+// Der IR-Ring kann über UART, SPI oder I2C angeschlossen werden
+// (siehe ir_ring.h).
+
+// ---------- SPI-Stecker (Blatt 3/8) ----------
+// Pins 11 (MOSI), 12 (MISO), 13 (SCK) sind der SPI-Bus.
+// ACHTUNG: Pin 13 ist auch die eingebaute LED vom Teensy. Weil er auf
+// unserer Platine für SPI gebraucht wird, benutzen wir die LED nicht.
+constexpr uint8_t PIN_SPI_DIO0 = 19;   // DIO0 = Chip-Select (CS) am Stecker
+constexpr uint8_t PIN_SPI_DIO1 = 31;
+constexpr uint8_t PIN_SPI_DIO2 = 30;
+constexpr uint8_t PIN_SPI_DIO3 = 21;
+constexpr uint8_t PIN_SPI_DIO4 = 22;
+
+// ---------- Sonstiges (für später) ----------
+constexpr uint8_t PIN_KICKER         = 18;  // Schuss-Mechanik (Blatt 6/8)
+constexpr uint8_t PIN_DRIBBLER_PWM   = 33;  // Brushless-Dribbler (Blatt 6/8)
+constexpr uint8_t PIN_LICHTSCHRANKE  = 23;  // Ball im Fänger? (analog, Blatt 3/8)
+constexpr uint8_t PIN_RGB_LEDS       = 20;  // WS2812B-LED-Ring (Blatt 8/8)
 
 // ---------- Ultraschall (4 Stück) ----------
-// Viele Ultraschallsensoren haben einen Trigger-Pin (Signal senden)
-// und einen Echo-Pin (Antwort empfangen).
-constexpr uint8_t PIN_US_VORNE_TRIG   = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_VORNE_ECHO   = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_RECHTS_TRIG  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_RECHTS_ECHO  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_HINTEN_TRIG  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_HINTEN_ECHO  = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_LINKS_TRIG   = PIN_UNBEKANNT;
-constexpr uint8_t PIN_US_LINKS_ECHO   = PIN_UNBEKANNT;
-
-// ---------- IR-Ring (16 Sensoren) ----------
-// Wie die 16 Sensoren angeschlossen sind (direkt an 16 Pins oder
-// über einen Multiplexer), ist noch offen. Das tragen wir später ein.
-
-// ---------- Kompass ----------
-// Die meisten Kompass-Module nutzen I2C. Beim Teensy 4.0 sind das
-// standardmäßig Pin 18 (SDA) und Pin 19 (SCL) – das prüfen wir,
-// sobald das Kompass-Modell feststeht.
+// Auf der Hauptplatine gibt es keinen eigenen Anschluss dafür.
+// Wie die Sensoren angeschlossen werden, ist noch offen.

@@ -10,8 +10,12 @@
 //   2. Entscheiden      (Was soll der Roboter jetzt tun?)
 //   3. Motoren ansteuern
 //
-// STAND: Grundgerüst. Die Module sind noch leer, weil Pins und
-// Motormodell noch nicht feststehen.
+// Der Roboter fährt nur, wenn der START-Schalter auf der Platine
+// an ist. So können wir ihn auf dem Feld sicher hinstellen und erst
+// auf den Pfiff des Schiedsrichters starten.
+//
+// STAND: Motoren und Kompass können angesteuert werden. IR-Ring,
+// Ultraschall und die Spiel-Logik fehlen noch.
 // =============================================================
 #include <Arduino.h>
 
@@ -19,6 +23,7 @@
 #include "ir_ring.h"
 #include "ultraschall.h"
 #include "kompass.h"
+#include "pins.h"
 
 // Wie oft loop() wirklich arbeiten soll: alle 10 Millisekunden
 // (also 100-mal pro Sekunde). So läuft der Roboter gleichmäßig,
@@ -34,7 +39,9 @@ unsigned long letzteAusgabe = 0;
 
 // Schickt die aktuellen Sensorwerte an den seriellen Monitor.
 void statusAusgeben() {
-  Serial.print("Ball gesehen: ");
+  Serial.print("Start: ");
+  Serial.print(digitalRead(PIN_START_SCHALTER) == HIGH ? "an" : "aus");
+  Serial.print(" | Ball gesehen: ");
   Serial.print(IrRing::ballGesehen() ? "ja" : "nein");
   Serial.print(" | Ball-Richtung: ");
   Serial.print(IrRing::ballRichtungGrad());
@@ -60,12 +67,11 @@ void setup() {
   Ultraschall::starten();
   Kompass::starten();
 
+  // Start-Schalter als Eingang einstellen.
+  pinMode(PIN_START_SCHALTER, INPUT);
+
   // Sicherheit: Am Anfang steht der Roboter still.
   Motoren::stopp();
-
-  // Die eingebaute LED (Pin 13) zeigt: Programm läuft.
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
 
   Serial.println("Bereit.");
 }
@@ -86,14 +92,20 @@ void loop() {
   Kompass::lesen();
 
   // ---------- 2. Entscheiden ----------
-  // TODO: Hier kommt später die Spiel-Logik hin, zum Beispiel:
-  //   - Ball gesehen?  -> zum Ball fahren
-  //   - Ball vorne?    -> Richtung gegnerisches Tor fahren
-  //   - Ball weg?      -> zurück vors eigene Tor
-  // Bis dahin bleibt der Roboter stehen.
+  bool startAn = digitalRead(PIN_START_SCHALTER) == HIGH;
 
-  // ---------- 3. Motoren ansteuern ----------
-  Motoren::stopp();
+  if (!startAn) {
+    // START-Schalter aus: Roboter steht.
+    Motoren::stopp();
+  } else {
+    // TODO: Hier kommt später die Spiel-Logik hin, zum Beispiel:
+    //   - Ball gesehen?  -> zum Ball fahren
+    //   - Ball vorne?    -> Richtung gegnerisches Tor fahren
+    //   - Ball weg?      -> zurück vors eigene Tor
+    // ---------- 3. Motoren ansteuern ----------
+    // Bis die Logik da ist, bleibt der Roboter auch hier stehen.
+    Motoren::stopp();
+  }
 
   // ---------- Testausgabe ----------
   if (jetzt - letzteAusgabe >= AUSGABE_INTERVALL_MS) {

@@ -1,8 +1,9 @@
 // =============================================================
 // ultraschall.cpp – Ultraschall (Umsetzung)
 // =============================================================
-// STAND: Noch keine echte Logik, weil Sensormodell und Pins
-// noch nicht feststehen.
+// STAND: Noch keine echte Logik, weil Sensormodell und Anschluss
+// noch nicht feststehen. Auf der Hauptplatine gibt es keinen eigenen
+// Ultraschall-Anschluss.
 // =============================================================
 #include "ultraschall.h"
 #include <Arduino.h>

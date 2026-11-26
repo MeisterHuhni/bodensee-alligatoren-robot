@@ -1,19 +1,25 @@
 // =============================================================
-// kompass.h – Kompass (in welche Richtung schaut der Roboter?)
+// kompass.h – Lagesensor BNO055 (in welche Richtung schaut der Roboter?)
 // =============================================================
-// Der Kompass sagt uns, wie der Roboter gedreht ist. So kann er
-// immer wieder zum gegnerischen Tor schauen.
+// Der BNO055 sitzt auf einer eigenen kleinen Platine (Breakout) und
+// ist über I2C mit dem Teensy verbunden. Er hat drei Sensoren eingebaut
+// (Gyroskop, Beschleunigung, Magnetfeld) und rechnet selbst aus, wie
+// der Roboter gedreht ist.
 //
-// Achtung laut Regeln: Auf dem Feld kann es magnetische Störungen
-// geben. Deshalb setzen wir vor dem Spiel einen Nullpunkt
-// ("so rum ist vorne") und vertrauen dem Wert nicht blind.
+// Wir benutzen ihn im Modus "IMU": Dann nimmt er NUR Gyroskop und
+// Beschleunigung, aber NICHT das Magnetfeld. Grund: Laut Regeln kann es
+// auf dem Feld magnetische Störungen geben. Im IMU-Modus stören die nicht.
+// Nachteil: Er weiß nicht, wo Norden ist, sondern zählt nur, wie weit
+// sich der Roboter seit dem Einschalten gedreht hat. Deshalb setzen wir
+// einen Nullpunkt ("so rum ist vorne").
 // =============================================================
 #pragma once
 
 namespace Kompass {
 
-// Einmal in setup() aufrufen.
-void starten();
+// Einmal in setup() aufrufen. Gibt true zurück, wenn der BNO055
+// gefunden wurde.
+bool starten();
 
 // Regelmäßig aufrufen: neuen Wert vom Sensor holen.
 void lesen();

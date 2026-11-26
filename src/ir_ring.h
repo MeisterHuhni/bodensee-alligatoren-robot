@@ -5,6 +5,12 @@
 // Die 16 Sensoren sitzen im Kreis um den Roboter. Der Sensor,
 // der am meisten Licht sieht, zeigt ungefähr in Richtung Ball.
 //
+// Unser IR-Ring (Schaltplan "IR-Ring V1.1") hat einen EIGENEN
+// Mikrocontroller (STM32). Der liest die Sensoren aus und rechnet.
+// Der Teensy fragt ihn nur nach dem Ergebnis. Dafür hat der Ring
+// drei Anschlüsse: UART, SPI und I2C. Welchen wir benutzen, ist
+// noch offen.
+//
 // Wichtig laut Regeln: Wir dürfen selbst KEIN IR-Licht aussenden.
 // Die Sensoren empfangen nur.
 // =============================================================
