@@ -23,7 +23,12 @@
 #include "ir_ring.h"
 #include "ultraschall.h"
 #include "kompass.h"
+#include "motortest.h"
 #include "pins.h"
+
+// true  = statt Fußball läuft das Motortest-Programm (motortest.cpp)
+// false = normales Spielprogramm
+constexpr bool MOTORTEST_AKTIV = true;
 
 // Wie oft loop() wirklich arbeiten soll: alle 10 Millisekunden
 // (also 100-mal pro Sekunde). So läuft der Roboter gleichmäßig,
@@ -97,6 +102,10 @@ void loop() {
   if (!startAn) {
     // START-Schalter aus: Roboter steht.
     Motoren::stopp();
+    Motortest::zuruecksetzen();
+  } else if (MOTORTEST_AKTIV) {
+    // Motortest statt Fußball.
+    Motortest::ausfuehren(jetzt);
   } else {
     // TODO: Hier kommt später die Spiel-Logik hin, zum Beispiel:
     //   - Ball gesehen?  -> zum Ball fahren
@@ -108,7 +117,8 @@ void loop() {
   }
 
   // ---------- Testausgabe ----------
-  if (jetzt - letzteAusgabe >= AUSGABE_INTERVALL_MS) {
+  // (beim Motortest aus, damit man dessen Meldungen besser liest)
+  if (!MOTORTEST_AKTIV && jetzt - letzteAusgabe >= AUSGABE_INTERVALL_MS) {
     letzteAusgabe = jetzt;
     statusAusgeben();
   }

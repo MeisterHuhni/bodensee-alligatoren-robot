@@ -26,7 +26,8 @@ bodensee-alligatoren-robot/
 │   ├── motoren.h/.cpp      Antrieb (fahren, drehen, stoppen)
 │   ├── ir_ring.h/.cpp      IR-Ring: Wo ist der Ball?
 │   ├── ultraschall.h/.cpp  Abstände zu den Banden
-│   └── kompass.h/.cpp      Blickrichtung des Roboters
+│   ├── kompass.h/.cpp      Blickrichtung des Roboters
+│   └── motortest.h/.cpp    Testprogramm für die Motoren
 ├── .gitignore              Dateien, die Git ignorieren soll (z.B. Build-Ordner)
 └── README.md               Diese Datei
 ```
@@ -76,6 +77,19 @@ Unten in der blauen Leiste von VS Code:
 | ✓ Häkchen | **Bauen**: prüft und übersetzt den Code |
 | → Pfeil | **Hochladen**: baut und spielt den Code auf den Teensy |
 | 🔌 Stecker | **Serieller Monitor**: zeigt, was der Teensy über `Serial.print` sendet |
+
+## Motortest
+
+In `src/main.cpp` steht `MOTORTEST_AKTIV`. Bei `true` fährt der Roboter
+statt Fußball ein Testprogramm, sobald der START-Schalter an ist:
+
+1. nur MOT1 vorwärts
+2. nur MOT2 vorwärts
+3. `fahren()` geradeaus vorwärts
+4. `fahren()` nach rechts drehen
+
+Jeder Schritt dauert 2 s, im seriellen Monitor steht, was passieren soll.
+Beim ersten Mal den Roboter aufbocken, damit die Räder in der Luft sind.
 
 ## Arbeiten mit Git (Kurzfassung)
 
